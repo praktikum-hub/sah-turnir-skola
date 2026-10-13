@@ -47,22 +47,32 @@ GH_REPO = st.secrets.get("GITHUB_REPO", "")
 
 
 def dohvati_s_githuba(filename):
-    """Učitava datoteku izravno s GitHub repozitorija."""
+    """Učitava datoteku izravno s GitHub repozitorija uz sigurnosnu provjeru mreže."""
+    # Ako nema tokena, čitaj lokalno s diska
     if not GH_TOKEN or not GH_REPO:
         if os.path.exists(filename):
             with open(filename, "r", encoding="utf-8") as f:
                 return json.load(f)
         return [] if "povijest" in filename else {}
 
-    url = f"https://github.com{GH_REPO.replace('/', '%2F')}/contents/{filename}" if GH_REPO.isdigit() else f"https://github.com{GH_REPO}/contents/{filename}"
+    url = f"https://github.com{GH_REPO}/contents/{filename}"
     headers = {"Authorization": f"token {GH_TOKEN}", "Accept": "application/vnd.github.v3+json"}
     
-    odgovor = requests.get(url, headers=headers)
-    if odgovor.status_code == 200:
-        sadrzaj_base64 = odgovor.json()["content"]
-        sadrzaj_tekst = base64.b64decode(sadrzaj_base64).decode("utf-8")
-        return json.loads(sadrzaj_tekst)
+    try:
+        odgovor = requests.get(url, headers=headers, timeout=5)
+        if odgovor.status_code == 200:
+            sadrzaj_base64 = odgovor.json()["content"]
+            sadrzaj_tekst = base64.b64decode(sadrzaj_base64).decode("utf-8")
+            return json.loads(sadrzaj_tekst)
+    except Exception:
+        # Sigurnosni povratak na lokalne datoteke u slučaju greške s internetom ili tokenom
+        st.sidebar.error("⚠️ Greška u povezivanju s GitHubom! Trenutni podaci se čitaju lokalno.")
+        if os.path.exists(filename):
+            with open(filename, "r", encoding="utf-8") as f:
+                return json.load(f)
+                
     return [] if "povijest" in filename else {}
+
 
 def spremi_na_github(filename, podaci):
     """Sprema i automatski 'commit-a' ažuriranu datoteku na GitHub repozitorij."""
