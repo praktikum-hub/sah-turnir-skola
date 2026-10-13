@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Školski Šahovski Turnir - Rezultati</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1, h2 { color: #1e293b; text-align: center; }
+        .tabs { display: flex; justify-content: center; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; }
+        .tab-btn { padding: 10px 20px; border: none; background: none; font-size: 16px; font-weight: bold; cursor: pointer; color: #64748b; }
+        .tab-btn.active { color: #2563eb; border-bottom: 3px solid #2563eb; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background-color: #f8fafc; color: #475569; font-weight: 600; }
+        tr:hover { background-color: #f1f5f9; }
+        .rank { font-weight: bold; color: #2563eb; }
+        .badge { background: #e2e8f0; padding: 3px 8px; border-radius: 4px; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>👑 Školski Šahovski Turnir</h1>
+    
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('rang-lista')">📊 Rang Lista</button>
+        <button class="tab-btn" onclick="switchTab('povijest')">⏳ Povijest Mečeva</button>
+    </div>
+
+    <!-- TAB 1: RANG LISTA -->
+    <div id="rang-lista" class="tab-content active">
+        <h2>Trenutni poredak učenika (Elo Sustav)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Rang</th>
+                    <th>Ime i Prezime</th>
+                    <th>Elo Rejting</th>
+                    <th>Odigrano</th>
+                    <th>Pobjede</th>
+                    <th>Remiji</th>
+                    <th>Porazi</th>
+                </tr>
+            </thead>
+            <tbody id="tablica-rang">
+                <tr><td colspan="7" style="text-align:center;">Učitavanje podataka...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- TAB 2: POVIJEST -->
+    <div id="povijest" class="tab-content">
+        <h2>Zadnji odigrani mečevi</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Datum i Vrijeme</th>
+                    <th>Bijeli</th>
+                    <th>Crni</th>
+                    <th>Rezultat</th>
+                </tr>
+            </thead>
+            <tbody id="tablica-povijest">
+                <tr><td colspan="5" style="text-align:center;">Učitavanje povijesti...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // --- PROMIJENITE OVO PREMA VAŠEM GITHUB-U ---
+    const KORISNIK = "praktikum-hub";
+    const REPO = "sah-turnir-skola";
+
+    const URL_PODACI = `https://githubusercontent.com{KORISNIK}/${REPO}/main/sah_podaci.json`;
+    const URL_POVIJEST = `https://githubusercontent.com{KORISNIK}/${REPO}/main/sah_povijest_meceva.json`;
+
+    async function ucitajPodatke() {
+        try {
+            // 1. Dohvaćanje i prikaz Rang Liste
+            const odzivPodaci = await fetch(URL_PODACI);
+            if (odzivPodaci.ok) {
+                const podaci = await odzivPodaci.json();
+                
+                // Pretvaranje objekta u niz i sortiranje po rejtingu i pobjedama
+                const sortirani = Object.entries(podaci).map(([ime, stats]) => ({ ime, ...stats }));
+                sortirani.sort((a, b) => b.rejting - a.rejting || b.pobjede - a.pobjede);
+
+                const tbodyRang = document.getElementById("tablica-rang");
+                tbodyRang.innerHTML = "";
+                
+                sortirani.forEach((igrac, indeks) => {
+                    tbodyRang.innerHTML += `
+                        <tr>
+                            <td class="rank">${indeks + 1}.</td>
+                            <td><strong>${igrac.ime}</strong></td>
+                            <td><span class="badge" style="background:#dbeafe; color:#1e40af; font-weight:bold;">${igrac.rejting.toFixed(1)}</span></td>
+                            <td>${igrac.odigrano}</td>
+                            <td style="color:green;">${igrac.pobjede}</td>
+                            <td style="color:orange;">${igrac.remiji}</td>
+                            <td style="color:red;">${igrac.porazi}</td>
+                        </tr>
+                    `;
+                });
+            }
+        } catch (e) {
+            document.getElementById("tablica-rang").innerHTML = `<tr><td colspan="7" style="text-align:center; color:red;">Nema upisanih igrača ili datoteka još ne postoji.</td></tr>`;
+        }
+
+        try {
+            // 2. Dohvaćanje i prikaz Povijesti mečeva
+            const odzivPovijest = await fetch(URL_POVIJEST);
+            if (odzivPovijest.ok) {
+                const povijest = await odzivPovijest.json();
+                const tbodyPovijest = document.getElementById("tablica-povijest");
+                tbodyPovijest.innerHTML = "";
+
+                // Prikazujemo mečeve obrnuto (najnoviji na vrhu)
+                povijest.reverse().forEach(mec => {
+                    tbodyPovijest.innerHTML += `
+                        <tr>
+                            <td>#${mec.id}</td>
+                            <td>${mec.datum}</td>
+                            <td>${mec.bijeli}</td>
+                            <td>${mec.crni}</td>
+                            <td><span class="badge">${mec.ishod}</span></td>
+                        </tr>
+                    `;
+                });
+            }
+        } catch (e) {
+            document.getElementById("tablica-povijest").innerHTML = `<tr><td colspan="5" style="text-align:center; color:red;">Nema odigranih mečeva ili datoteka još ne postoji.</td></tr>`;
+        }
+    }
+
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        
+        document.getElementById(tabId).classList.add('active');
+        event.target.classList.add('active');
+    }
+
+    // Pokreni učitavanje odmah pri otvaranju stranice
+    ucitajPodatke();
+</script>
+
+</body>
+</html>
