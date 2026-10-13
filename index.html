@@ -3,77 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Školski Šahovski Turnir - Rezultati</title>
+    <title>ŠSSD Adamići - Šahovski Turnir</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 20px; }
-        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h1, h2 { color: #1e293b; text-align: center; }
-        .tabs { display: flex; justify-content: center; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; }
-        .tab-btn { padding: 10px 20px; border: none; background: none; font-size: 16px; font-weight: bold; cursor: pointer; color: #64748b; }
-        .tab-btn.active { color: #2563eb; border-bottom: 3px solid #2563eb; }
+        /* Vizualni identitet prema ss-adamic.com */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f4f6f9; 
+            color: #333; 
+            margin: 0; 
+            padding: 20px; 
+        }
+        .container { 
+            max-width: 1000px; 
+            margin: 30px auto; 
+            background: white; 
+            padding: 40px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+        }
+        
+        /* Školski branding - Adamić tamnoplava */
+        h1 { 
+            color: #1e293b; 
+            text-align: center; 
+            font-size: 28px; 
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 16px;
+            margin-bottom: 35px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        
+        /* Moderni tabovi na temelju navigacije škole */
+        .tabs { 
+            display: flex; 
+            justify-content: center; 
+            margin-bottom: 30px; 
+            border-bottom: 2px solid #e2e8f0; 
+        }
+        .tab-btn { 
+            padding: 12px 28px; 
+            border: none; 
+            background: none; 
+            font-size: 16px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            color: #64748b; 
+            transition: all 0.2s ease;
+        }
+        .tab-btn:hover {
+            color: #1e293b;
+        }
+        .tab-btn.active { 
+            color: #2563eb; 
+            border-bottom: 3px solid #2563eb; 
+        }
+        
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
-        th { background-color: #f8fafc; color: #475569; font-weight: 600; }
-        tr:hover { background-color: #f1f5f9; }
-        .rank { font-weight: bold; color: #2563eb; }
-        .badge { background: #e2e8f0; padding: 3px 8px; border-radius: 4px; font-size: 12px; }
+        
+        /* Tablice s Adamić plavim naglascima */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 10px; 
+        }
+        th, td { 
+            padding: 14px 16px; 
+            text-align: left; 
+            border-bottom: 1px solid #e2e8f0; 
+        }
+        th { 
+            background-color: #f8fafc; 
+            color: #475569; 
+            font-weight: 600; 
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+        tr:hover { background-color: #f8fafc; }
+        
+        /* Posebni elementi */
+        .rank { 
+            font-weight: bold; 
+            color: #2563eb; 
+            font-size: 16px;
+        }
+        .student-name {
+            font-size: 15px;
+            color: #1e293b;
+        }
+        
+        /* Elo značka u stilu elemenata s Adamić web stranice */
+        .badge-elo { 
+            background-color: #dbeafe; 
+            color: #1e40af; 
+            padding: 5px 12px; 
+            border-radius: 6px; 
+            font-size: 14px; 
+            font-weight: bold; 
+            display: inline-block;
+        }
+        .badge-status {
+            background-color: #f1f5f9;
+            color: #475569;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>👑 Školski Šahovski Turnir</h1>
+    <h1>👑 ŠŠD Adamići</h1>
+    <div class="subtitle">Šahovska liga - Rezultati uživo</div>
     
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('rang-lista')">📊 Rang Lista</button>
-        <button class="tab-btn" onclick="switchTab('povijest')">⏳ Povijest Mečeva</button>
+        <button class="tab-btn active" onclick="switchTab(event, 'rang-lista')">📊 Rang Lista</button>
+        <button class="tab-btn" onclick="switchTab(event, 'povijest')">⏳ Povijest Mečeva</button>
     </div>
 
     <!-- TAB 1: RANG LISTA -->
     <div id="rang-lista" class="tab-content active">
-        <h2>Trenutni poredak učenika (Elo Sustav)</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Rang</th>
-                    <th>Ime i Prezime</th>
-                    <th>Elo Rejting</th>
-                    <th>Odigrano</th>
-                    <th>Pobjede</th>
-                    <th>Remiji</th>
-                    <th>Porazi</th>
-                </tr>
-            </thead>
-            <tbody id="tablica-rang">
-                <tr><td colspan="7" style="text-align:center;">Učitavanje podataka...</td></tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 8%">Rang</th>
+                        <th style="width: 35%">Ime i Prezime</th>
+                        <th style="width: 17%">Elo Rejting</th>
+                        <th style="width: 10%">Mečevi</th>
+                        <th style="width: 10%; color: #16a34a;">Pob</th>
+                        <th style="width: 10%; color: #ea580c;">Rem</th>
+                        <th style="width: 10%; color: #dc2626;">Por</th>
+                    </tr>
+                </thead>
+                <tbody id="tablica-rang">
+                    <tr><td colspan="7" style="text-align:center; color:#64748b;">Učitavanje trenutnog poretka...</td></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- TAB 2: POVIJEST -->
     <div id="povijest" class="tab-content">
-        <h2>Zadnji odigrani mečevi</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Datum i Vrijeme</th>
-                    <th>Bijeli</th>
-                    <th>Crni</th>
-                    <th>Rezultat</th>
-                </tr>
-            </thead>
-            <tbody id="tablica-povijest">
-                <tr><td colspan="5" style="text-align:center;">Učitavanje povijesti...</td></tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 10%">ID</th>
+                        <th style="width: 25%">Datum i Vrijeme</th>
+                        <th style="width: 25%">Bijeli</th>
+                        <th style="width: 25%">Crni</th>
+                        <th style="width: 15%">Rezultat</th>
+                    </tr>
+                </thead>
+                <tbody id="tablica-povijest">
+                    <tr><td colspan="5" style="text-align:center; color:#64748b;">Učitavanje odigranih mečeva...</td></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 <script>
-    // --- PROMIJENITE OVO PREMA VAŠEM GITHUB-U ---
+    // Automatski povlači vaše podatke s GitHub repozitorija
     const KORISNIK = "praktikum-hub";
     const REPO = "sah-turnir-skola";
 
@@ -82,12 +188,11 @@
 
     async function ucitajPodatke() {
         try {
-            // 1. Dohvaćanje i prikaz Rang Liste
+            // 1. Dohvaćanje i obrada Rang Liste
             const odzivPodaci = await fetch(URL_PODACI);
             if (odzivPodaci.ok) {
                 const podaci = await odzivPodaci.json();
                 
-                // Pretvaranje objekta u niz i sortiranje po rejtingu i pobjedama
                 const sortirani = Object.entries(podaci).map(([ime, stats]) => ({ ime, ...stats }));
                 sortirani.sort((a, b) => b.rejting - a.rejting || b.pobjede - a.pobjede);
 
@@ -98,55 +203,55 @@
                     tbodyRang.innerHTML += `
                         <tr>
                             <td class="rank">${indeks + 1}.</td>
-                            <td><strong>${igrac.ime}</strong></td>
-                            <td><span class="badge" style="background:#dbeafe; color:#1e40af; font-weight:bold;">${igrac.rejting.toFixed(1)}</span></td>
-                            <td>${igrac.odigrano}</td>
-                            <td style="color:green;">${igrac.pobjede}</td>
-                            <td style="color:orange;">${igrac.remiji}</td>
-                            <td style="color:red;">${igrac.porazi}</td>
+                            <td class="student-name"><strong>${igrac.ime}</strong></td>
+                            <td><span class="badge-elo">${igrac.rejting.toFixed(1)}</span></td>
+                            <td><strong>${igrac.odigrano}</strong></td>
+                            <td style="color:#16a34a; font-weight:600;">${igrac.pobjede}</td>
+                            <td style="color:#ea580c; font-weight:600;">${igrac.remiji}</td>
+                            <td style="color:#dc2626; font-weight:600;">${igrac.porazi}</td>
                         </tr>
                     `;
                 });
             }
         } catch (e) {
-            document.getElementById("tablica-rang").innerHTML = `<tr><td colspan="7" style="text-align:center; color:red;">Nema upisanih igrača ili datoteka još ne postoji.</td></tr>`;
+            document.getElementById("tablica-rang").innerHTML = `<tr><td colspan="7" style="text-align:center; color:#dc2626;">Trenutno nema registriranih rezultata na turniru.</td></tr>`;
         }
 
         try {
-            // 2. Dohvaćanje i prikaz Povijesti mečeva
+            // 2. Dohvaćanje i obrada Povijesti mečeva
             const odzivPovijest = await fetch(URL_POVIJEST);
             if (odzivPovijest.ok) {
                 const povijest = await odzivPovijest.json();
                 const tbodyPovijest = document.getElementById("tablica-povijest");
                 tbodyPovijest.innerHTML = "";
 
-                // Prikazujemo mečeve obrnuto (najnoviji na vrhu)
+                // Najnoviji mečevi idu prvi na vrh tablice
                 povijest.reverse().forEach(mec => {
                     tbodyPovijest.innerHTML += `
                         <tr>
-                            <td>#${mec.id}</td>
-                            <td>${mec.datum}</td>
-                            <td>${mec.bijeli}</td>
-                            <td>${mec.crni}</td>
-                            <td><span class="badge">${mec.ishod}</span></td>
+                            <td><span style="color:#64748b; font-weight:500;">#${mec.id}</span></td>
+                            <td style="color:#475569; font-size:14px;">${mec.datum}</td>
+                            <td><strong>${mec.bijeli}</strong></td>
+                            <td><strong>${mec.crni}</strong></td>
+                            <td><span class="badge-status">${mec.ishod}</span></td>
                         </tr>
                     `;
                 });
             }
         } catch (e) {
-            document.getElementById("tablica-povijest").innerHTML = `<tr><td colspan="5" style="text-align:center; color:red;">Nema odigranih mečeva ili datoteka još ne postoji.</td></tr>`;
+            document.getElementById("tablica-povijest").innerHTML = `<tr><td colspan="5" style="text-align:center; color:#dc2626;">Još nema evidentiranih mečeva u povijesti.</td></tr>`;
         }
     }
 
-    function switchTab(tabId) {
+    function switchTab(evt, tabId) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
         
         document.getElementById(tabId).classList.add('active');
-        event.target.classList.add('active');
+        evt.currentTarget.classList.add('active');
     }
 
-    // Pokreni učitavanje odmah pri otvaranju stranice
+    // Učitaj podatke prilikom učitavanja stranice
     ucitajPodatke();
 </script>
 
