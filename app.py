@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import json
 import os
+import requests
+import base64
 from datetime import datetime
 
 SIGURNA_SIFRA = "SahSkola2026"
@@ -14,25 +16,86 @@ POCETNI_REJTING = 1200
 K_FAKTOR = 32
 
 # --- FUNKCIJE ZA UPRAVLJANJE PODACIMA ---
-def ucitaj_podatke():
-    if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return {}
+# def ucitaj_podatke():
+#     if os.path.exists(DATA_FILE):
+#         with open(DATA_FILE, "r", encoding="utf-8") as f:
+#             return json.load(f)
+#     return {}
 
-def spremi_podatke(podaci):
-    with open(DATA_FILE, "w", encoding="utf-8") as f:
-        json.dump(podaci, f, indent=4, ensure_ascii=False)
+# def spremi_podatke(podaci):
+#     with open(DATA_FILE, "w", encoding="utf-8") as f:
+#         json.dump(podaci, f, indent=4, ensure_ascii=False)
 
-def ucitaj_povijest():
-    if os.path.exists(LOG_FILE):
-        with open(LOG_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return []
+# def ucitaj_povijest():
+#     if os.path.exists(LOG_FILE):
+#         with open(LOG_FILE, "r", encoding="utf-8") as f:
+#             return json.load(f)
+#     return []
 
-def spremi_povijest(povijest):
-    with open(LOG_FILE, "w", encoding="utf-8") as f:
-        json.dump(povijest, f, indent=4, ensure_ascii=False)
+# def spremi_povijest(povijest):
+#     with open(LOG_FILE, "w", encoding="utf-8") as f:
+#         json.dump(povijest, f, indent=4, ensure_ascii=False)
+
+# --- FUNKCIJE ZA UPRAVLJANJE PODACIMA PREKO GITHUBA ---
+
+# Dohvaćanje sigurnih ključeva iz Streamlit Secrets postavki
+GH_TOKEN = st.secrets.get("GITHUB_TOKEN", "")
+GH_REPO = st.secrets.get("GITHUB_REPO", "")
+
+# GH_TOKEN = ""
+# GH_REPO = ""
+
+
+def dohvati_s_githuba(filename):
+    """Učitava datoteku izravno s GitHub repozitorija."""
+    if not GH_TOKEN or not GH_REPO:
+        if os.path.exists(filename):
+            with open(filename, "r", encoding="utf-8") as f:
+                return json.load(f)
+        return [] if "povijest" in filename else {}
+
+    url = f"https://github.com{GH_REPO.replace('/', '%2F')}/contents/{filename}" if GH_REPO.isdigit() else f"https://github.com{GH_REPO}/contents/{filename}"
+    headers = {"Authorization": f"token {GH_TOKEN}", "Accept": "application/vnd.github.v3+json"}
+    
+    odgovor = requests.get(url, headers=headers)
+    if odgovor.status_code == 200:
+        sadrzaj_base64 = odgovor.json()["content"]
+        sadrzaj_tekst = base64.b64decode(sadrzaj_base64).decode("utf-8")
+        return json.loads(sadrzaj_tekst)
+    return [] if "povijest" in filename else {}
+
+def spremi_na_github(filename, podaci):
+    """Sprema i automatski 'commit-a' ažuriranu datoteku na GitHub repozitorij."""
+    novi_sadrzaj = json.dumps(podaci, indent=4, ensure_ascii=False)
+    
+    if not GH_TOKEN or not GH_REPO:
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(novi_sadrzaj)
+        return
+
+    url = f"https://github.com{GH_REPO}/contents/{filename}"
+    headers = {"Authorization": f"token {GH_TOKEN}", "Accept": "application/vnd.github.v3+json"}
+    
+    sha = ""
+    odgovor_get = requests.get(url, headers=headers)
+    if odgovor_get.status_code == 200:
+        sha = odgovor_get.json()["sha"]
+        
+    sadrzaj_base64 = base64.b64encode(novi_sadrzaj.encode("utf-8")).decode("utf-8")
+    payload = {
+        "message": f"Automatsko ažuriranje {filename} s turnira",
+        "content": sadrzaj_base64,
+        "sha": sha if sha else None
+    }
+    
+    requests.put(url, headers=headers, json=payload)
+
+# Preusmjeravanje starih funkcija na novi GitHub sustav
+def ucitaj_podatke(): return dohvati_s_githuba(DATA_FILE)
+def spremi_podatke(podaci): spremi_na_github(DATA_FILE, podaci)
+def ucitaj_povijest(): return dohvati_s_githuba(LOG_FILE)
+def spremi_povijest(povijest): spremi_na_github(LOG_FILE, povijest)
+
 
 def izracunaj_elo_promjenu(rejting_a, rejting_b, ishod_a):
     ocekivani = 1 / (1 + 10 ** ((rejting_b - rejting_a) / 400))
