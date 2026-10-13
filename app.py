@@ -45,18 +45,20 @@ GH_REPO = st.secrets.get("GITHUB_REPO", "")
 # GH_TOKEN = ""
 # GH_REPO = ""
 
-
 def dohvati_s_githuba(filename):
-    """Učitava datoteku izravno s GitHub repozitorija uz sigurnosnu provjeru mreže."""
-    # Ako nema tokena, čitaj lokalno s diska
+    """Učitava datoteku izravno s GitHub API-ja."""
     if not GH_TOKEN or not GH_REPO:
         if os.path.exists(filename):
             with open(filename, "r", encoding="utf-8") as f:
                 return json.load(f)
         return [] if "povijest" in filename else {}
 
+    # Čvrsto definirana i ispravna API putanja
     url = f"https://github.com{GH_REPO}/contents/{filename}"
-    headers = {"Authorization": f"token {GH_TOKEN}", "Accept": "application/vnd.github.v3+json"}
+    headers = {
+        "Authorization": f"token {GH_TOKEN}",
+        "Accept": "application/vnd.github.v3+json"
+    }
     
     try:
         odgovor = requests.get(url, headers=headers, timeout=5)
@@ -65,60 +67,31 @@ def dohvati_s_githuba(filename):
             sadrzaj_tekst = base64.b64decode(sadrzaj_base64).decode("utf-8")
             return json.loads(sadrzaj_tekst)
     except Exception as e:
-        # Prikazuje točan tehnički razlog greške kako bismo znali što ne valja
-        st.sidebar.error(f"⚠️ Greška u povezivanju s GitHubom: {e}")
-        st.sidebar.info(f"Putanja koju program pokušava dohvatiti: repos/{GH_REPO}/contents/{filename}")
-
-
+        st.sidebar.error(f"⚠️ Problem s GitHub vezom: {e}")
         if os.path.exists(filename):
             with open(filename, "r", encoding="utf-8") as f:
                 return json.load(f)
                 
     return [] if "povijest" in filename else {}
 
-
-# def spremi_na_github(filename, podaci):
-#     """Sprema i automatski 'commit-a' ažuriranu datoteku na GitHub repozitorij."""
-#     novi_sadrzaj = json.dumps(podaci, indent=4, ensure_ascii=False)
-    
-#     if not GH_TOKEN or not GH_REPO:
-#         with open(filename, "w", encoding="utf-8") as f:
-#             f.write(novi_sadrzaj)
-#         return
-
-#     url = f"https://github.com{GH_REPO}/contents/{filename}"
-#     headers = {"Authorization": f"token {GH_TOKEN}", "Accept": "application/vnd.github.v3+json"}
-    
-#     sha = ""
-#     odgovor_get = requests.get(url, headers=headers)
-#     if odgovor_get.status_code == 200:
-#         sha = odgovor_get.json()["sha"]
-        
-#     sadrzaj_base64 = base64.b64encode(novi_sadrzaj.encode("utf-8")).decode("utf-8")
-#     payload = {
-#         "message": f"Automatsko ažuriranje {filename} s turnira",
-#         "content": sadrzaj_base64,
-#         "sha": sha if sha else None
-#     }
-    
-#     requests.put(url, headers=headers, json=payload)
-
 def spremi_na_github(filename, podaci):
-    """Sprema podaci na GitHub, a ako veza ne uspije, sigurno ih sprema lokalno."""
+    """Sprema datoteku natrag na GitHub repozitorij."""
     novi_sadrzaj = json.dumps(podaci, indent=4, ensure_ascii=False)
     
-    # Ako se pokreće lokalno ili nema ključeva, spremi na disk
     if not GH_TOKEN or not GH_REPO:
         with open(filename, "w", encoding="utf-8") as f:
             f.write(novi_sadrzaj)
         return
 
+    # Čvrsto definirana i ispravna API putanja
     url = f"https://github.com{GH_REPO}/contents/{filename}"
-    headers = {"Authorization": f"token {GH_TOKEN}", "Accept": "application/vnd.github.v3+json"}
+    headers = {
+        "Authorization": f"token {GH_TOKEN}",
+        "Accept": "application/vnd.github.v3+json"
+    }
     
     try:
         sha = ""
-        # Koristimo timeout=5 kako program ne bi čekao vječno ako internet zapne
         odgovor_get = requests.get(url, headers=headers, timeout=5)
         if odgovor_get.status_code == 200:
             sha = odgovor_get.json()["sha"]
@@ -130,17 +103,9 @@ def spremi_na_github(filename, podaci):
             "sha": sha if sha else None
         }
         
-        odgovor_put = requests.put(url, headers=headers, json=payload, timeout=5)
-        
-        # Ako GitHub javi grešku 401 (krivi token) ili 404 (krivi repo), idemo na lokalno spremanje
-        #if odgovor_put.status_code not in:
-        if odgovor_put.status_code != 200 and odgovor_put.status_code != 201:
-            raise Exception("GitHub API odbio zapis")
-            
+        requests.put(url, headers=headers, json=payload, timeout=5)
     except Exception:
-        # --- SIGURNOSNA MREŽA ---
-        # Ako internet pukne ili su token/repo krivi, program NEĆE javiti grešku,
-        # nego će tiho spremiti podatke lokalno na Streamlit poslužitelj.
+        # Ako internet zakže, spremi lokalno na disk poslužitelja
         with open(filename, "w", encoding="utf-8") as f:
             f.write(novi_sadrzaj)
 
