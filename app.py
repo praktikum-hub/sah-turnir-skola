@@ -64,9 +64,12 @@ def dohvati_s_githuba(filename):
             sadrzaj_base64 = odgovor.json()["content"]
             sadrzaj_tekst = base64.b64decode(sadrzaj_base64).decode("utf-8")
             return json.loads(sadrzaj_tekst)
-    except Exception:
-        # Sigurnosni povratak na lokalne datoteke u slučaju greške s internetom ili tokenom
-        st.sidebar.error("⚠️ Greška u povezivanju s GitHubom! Trenutni podaci se čitaju lokalno.")
+    except Exception as e:
+        # Prikazuje točan tehnički razlog greške kako bismo znali što ne valja
+        st.sidebar.error(f"⚠️ Greška u povezivanju s GitHubom: {e}")
+        st.sidebar.info(f"Putanja koju program pokušava dohvatiti: repos/{GH_REPO}/contents/{filename}")
+
+
         if os.path.exists(filename):
             with open(filename, "r", encoding="utf-8") as f:
                 return json.load(f)
