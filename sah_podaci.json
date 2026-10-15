@@ -1,1 +1,9 @@
-{}
+{
+  "ime_aplikacije": "sah-turnir-skola",
+  "verzija": 1.0,
+  "korisnici": [
+    {"id": 1, "ime": "Ana Anic"},
+    {"id": 2, "ime": "Ivan Ivanic"}
+  ]
+}
+
