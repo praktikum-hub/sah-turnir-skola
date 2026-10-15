@@ -122,16 +122,11 @@ def spremi_na_github(filename, podaci):
             "sha": sha if sha else None
         }
         
-        odgovor_put = requests.put(url, headers=headers, json=payload, timeout=5)
-        
-        # OVO JE KLJUČ ZA PROBLEM IZ DRUGOG KUTA:
-        # Ispisat će točno što GitHub kaže na Streamlit ekranu
-        st.write(f"Debug [{filename}]: Status slanja = {odgovor_put.status_code}")
-        if odgovor_put.status_code not in:
-            st.error(f"GitHub greška: {odgovor_put.json()}")
-
-    except Exception as e:
-        st.sidebar.error(f"⚠️ Problem s GitHub vezom pri spremanju: {e}")
+        requests.put(url, headers=headers, json=payload, timeout=5)
+    except Exception:
+        # Ako internet zakže, spremi lokalno na disk poslužitelja
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(novi_sadrzaj)
 
 
 # Preusmjeravanje starih funkcija na novi GitHub sustav
