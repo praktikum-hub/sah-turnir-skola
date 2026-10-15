@@ -93,7 +93,15 @@ def spremi_na_github(filename, podaci):
         return
 
     # Čvrsto definirana i ispravna API putanja
-    url = f"https://api.github.com{GH_REPO}/contents/{filename}"
+    #url = f"https://api.github.com{GH_REPO}/contents/{filename}"
+    if "/repos/" in GH_REPO:
+        cista_putanja = GH_REPO.lstrip("/")
+        url = f"https://github.com{cista_putanja}/contents/{filename}"
+    else:
+        cisti_repo = GH_REPO.strip("/")
+        url = f"https://github.comrepos/{cisti_repo}/contents/{filename}"
+
+
     headers = {
         "Authorization": f"token {GH_TOKEN}",
         "Accept": "application/vnd.github.v3+json"
