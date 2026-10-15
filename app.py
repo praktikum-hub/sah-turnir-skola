@@ -55,7 +55,7 @@ def dohvati_s_githuba(filename):
 
     # Čvrsto definirana i ispravna API putanja
    # url = f"https://github.com{GH_REPO}/contents/{filename}"
-    url = f"https://://github.com{GH_REPO}/contents/{filename}"
+    url = f"https://github.com{GH_REPO}/contents/{filename}"
 
 
     headers = {
