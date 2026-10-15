@@ -100,10 +100,10 @@ def spremi_na_github(filename, podaci):
     #url = f"https://api.github.com{GH_REPO}/contents/{filename}"
     if "/repos/" in GH_REPO:
         cista_putanja = GH_REPO.lstrip("/")
-        url = f"https://github.com{cista_putanja}/contents/{filename}"
+        url = f"https://api.github.com/repos/{cista_putanja}/contents/{filename}"
     else:
         cisti_repo = GH_REPO.strip("/")
-        url = f"https://github.com/{cisti_repo}/contents/{filename}"
+        url = f"https://api.github.com/repos/{cisti_repo}/contents/{filename}"
 
 
     headers = {
@@ -117,7 +117,7 @@ def spremi_na_github(filename, podaci):
         sha = ""
        # odgovor_get = requests.get(url, headers=headers, timeout=5)
         odgovor_put = requests.put(url, headers=headers, json=payload, timeout=5)
-        st.write(f"GitHub odgovor za {filename}: {odgovor_put.status_code}")
+        #st.write(f"GitHub odgovor za {filename}: {odgovor_put.status_code}")
 
         
         if odgovor_get.status_code == 200:
