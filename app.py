@@ -67,7 +67,7 @@ def dohvati_s_githuba(filename):
     headers = {
         #"Authorization": f"token {GH_TOKEN}",
         "Authorization": f"Bearer {GH_TOKEN}",
-        "Accept": "application/vnd.github.v3+json",
+        "Accept": "application/vnd.github.v3+json"
     }
     
     try:
@@ -106,7 +106,7 @@ def spremi_na_github(filename, podaci):
     headers = {
         #"Authorization": f"token {GH_TOKEN}",
         "Authorization": f"Bearer {GH_TOKEN}",
-        "Accept": "application/vnd.github.v3+json"
+        "Accept": "application/vnd.github.v3+json",
         "User-Agent": "Streamlit-Chess-App"
     }
     
