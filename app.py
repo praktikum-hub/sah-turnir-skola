@@ -123,8 +123,11 @@ def spremi_na_github(filename, podaci):
         payload = {
             "message": f"Automatsko ažuriranje {filename} s turnira",
             "content": sadrzaj_base64,
-            "sha": sha if sha else None
+            #"sha": sha if sha else None
+       # }
         }
+        if sha:
+            payload["sha"] = sha
         
         requests.put(url, headers=headers, json=payload, timeout=5)
     except Exception:
