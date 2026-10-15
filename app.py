@@ -115,7 +115,13 @@ def spremi_na_github(filename, podaci):
     try:
         sha = ""
        # odgovor_get = requests.get(url, headers=headers, timeout=5)
-        odgovor_put = requests.put(url, headers=headers, json=payload, timeout=5)
+       # odgovor_put = requests.put(url, headers=headers, json=payload, timeout=5)
+                # Pronađite ovu liniju u funkciji spremi_na_github:
+        requests.put(url, headers=headers, json=payload, timeout=5)
+        
+        # ODMAH ISPOD NJE DODAJTE OVAJ REDAK:
+        st.sidebar.write(f"Status spremanja za {filename}: {requests.put(url, headers=headers, json=payload, timeout=5).status_code}")
+
        
         
         if odgovor_get.status_code == 200:
