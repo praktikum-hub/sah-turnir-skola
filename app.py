@@ -103,7 +103,8 @@ def spremi_na_github(filename, podaci):
 
 
     headers = {
-        "Authorization": f"token {GH_TOKEN}",
+        #"Authorization": f"token {GH_TOKEN}",
+        "Authorization": f"Bearer {GH_TOKEN}",
         "Accept": "application/vnd.github.v3+json"
     }
     
