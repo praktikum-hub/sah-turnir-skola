@@ -195,6 +195,7 @@ def preracunaj_sve_iz_povijesti():
 st.set_page_config(page_title="Školski Šahovski Turnir", layout="wide", page_icon="👑")
 st.title("👑 Školski Šahovski Turnir - Rang Lista")
 
+st.sidebar.write("Token učitan:", bool(GH_TOKEN))
 
 # --- PROVJERA ZAKLJUČAVANJA (LOGIN) ---
 if "autentificiran" not in st.session_state:
