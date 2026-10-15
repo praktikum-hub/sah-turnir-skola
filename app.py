@@ -131,8 +131,7 @@ def spremi_na_github(filename, podaci):
         
         requests.put(url, headers=headers, json=payload, timeout=5)
         odgovor_put = requests.put(url, headers=headers, json=payload, timeout=5)
-        st.sidebar.write(f"Status za {filename}: {odgovor_put.status_code}") # Pravo mjesto - DODAJ
-
+        
     except Exception:
         # Ako internet zakže, spremi lokalno na disk poslužitelja
         with open(filename, "w", encoding="utf-8") as f:
@@ -198,7 +197,6 @@ def preracunaj_sve_iz_povijesti():
 st.set_page_config(page_title="Školski Šahovski Turnir", layout="wide", page_icon="👑")
 st.title("👑 Školski Šahovski Turnir - Rang Lista")
 
-st.sidebar.write("Token učitan:", bool(GH_TOKEN))
 
 # --- PROVJERA ZAKLJUČAVANJA (LOGIN) ---
 if "autentificiran" not in st.session_state:
