@@ -5,5 +5,12 @@
         "bijeli": "Ivan Horvat",
         "crni": "Ana Anic",
         "ishod": "1/2-1/2"
+    },
+    {
+        "id": 2,
+        "datum": "15.10.2026. 21:20",
+        "bijeli": "Ivan Horvat",
+        "crni": "Iva Ivic",
+        "ishod": "1-0"
     }
 ]
