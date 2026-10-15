@@ -73,6 +73,8 @@ def dohvati_s_githuba(filename):
     
     try:
         odgovor = requests.get(url, headers=headers, timeout=5)
+        st.sidebar.write(f"Status za {filename}: {odgovor.status_code}")
+
         if odgovor.status_code == 200:
             sadrzaj_base64 = odgovor.json()["content"]
             sadrzaj_tekst = base64.b64decode(sadrzaj_base64).decode("utf-8")
