@@ -114,12 +114,7 @@ def spremi_na_github(filename, podaci):
     
     try:
         sha = ""
-       # odgovor_get = requests.get(url, headers=headers, timeout=5)
-        odgovor_put = requests.put(url, headers=headers, json=payload, timeout=5)
-       
-        st.sidebar.write(f"Status spremanja za {filename}: {requests.put(url, headers=headers, json=payload, timeout=5).status_code}")
-
-       
+        odgovor_get = requests.get(url, headers=headers, timeout=5)      
         
         if odgovor_get.status_code == 200:
             sha = odgovor_get.json()["sha"]
@@ -135,6 +130,9 @@ def spremi_na_github(filename, podaci):
             payload["sha"] = sha
         
         requests.put(url, headers=headers, json=payload, timeout=5)
+        odgovor_put = requests.put(url, headers=headers, json=payload, timeout=5)
+        st.sidebar.write(f"Status za {filename}: {odgovor_put.status_code}") # Pravo mjesto - DODAJ
+
     except Exception:
         # Ako internet zakže, spremi lokalno na disk poslužitelja
         with open(filename, "w", encoding="utf-8") as f:
