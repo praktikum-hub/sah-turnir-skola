@@ -1,9 +1,44 @@
 {
-  "ime_aplikacije": "sah-turnir-skola",
-  "verzija": 1.0,
-  "korisnici": [
-    {"id": 1, "ime": "Ana Anic"},
-    {"id": 2, "ime": "Ivan Ivanic"}
-  ]
+    "Pero": {
+        "rejting": 1200.0,
+        "odigrano": 0,
+        "pobjede": 0,
+        "remiji": 0,
+        "porazi": 0
+    },
+    "Ivo": {
+        "rejting": 1200.0,
+        "odigrano": 0,
+        "pobjede": 0,
+        "remiji": 0,
+        "porazi": 0
+    },
+    "Lana": {
+        "rejting": 1184.0,
+        "odigrano": 1,
+        "pobjede": 0,
+        "remiji": 0,
+        "porazi": 1
+    },
+    "Ana Anić": {
+        "rejting": 1216.0,
+        "odigrano": 1,
+        "pobjede": 1,
+        "remiji": 0,
+        "porazi": 0
+    },
+    "Mia": {
+        "rejting": 1200.0,
+        "odigrano": 0,
+        "pobjede": 0,
+        "remiji": 0,
+        "porazi": 0
+    },
+    "nia": {
+        "rejting": 1200.0,
+        "odigrano": 0,
+        "pobjede": 0,
+        "remiji": 0,
+        "porazi": 0
+    }
 }
-
