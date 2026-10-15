@@ -65,7 +65,8 @@ def dohvati_s_githuba(filename):
 
  
     headers = {
-        "Authorization": f"token {GH_TOKEN}",
+        #"Authorization": f"token {GH_TOKEN}",
+        "Authorization": f"Bearer {GH_TOKEN}",
         "Accept": "application/vnd.github.v3+json"
     }
     
