@@ -57,7 +57,7 @@ def dohvati_s_githuba(filename):
 
     if "/repos/" in GH_REPO:
         cista_putanja = GH_REPO.lstrip("/")
-        url = f"https://github.com{cista_putanja}/contents/{filename}"
+        url = f"https://github.com/{cista_putanja}/contents/{filename}"
     else:
         cisti_repo = GH_REPO.strip("/")
         url = f"https://github.com/{cisti_repo}/contents/{filename}"
