@@ -109,7 +109,7 @@ def spremi_na_github(filename, podaci):
         "Accept": "application/vnd.github.v3+json"
     }
     
-       try:
+    try:
         sha = ""
         odgovor_get = requests.get(url, headers=headers, timeout=5)
         if odgovor_get.status_code == 200:
