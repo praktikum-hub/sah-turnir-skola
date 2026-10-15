@@ -107,6 +107,7 @@ def spremi_na_github(filename, podaci):
         #"Authorization": f"token {GH_TOKEN}",
         "Authorization": f"Bearer {GH_TOKEN}",
         "Accept": "application/vnd.github.v3+json"
+        "User-Agent": "Streamlit-Chess-App"
     }
     
     try:
