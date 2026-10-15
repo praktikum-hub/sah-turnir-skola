@@ -73,8 +73,7 @@ def dohvati_s_githuba(filename):
     
     try:
         odgovor = requests.get(url, headers=headers, timeout=5)
-        st.sidebar.write(f"Status za {filename}: {odgovor.status_code}")
-
+        
         if odgovor.status_code == 200:
             sadrzaj_base64 = odgovor.json()["content"]
             sadrzaj_tekst = base64.b64decode(sadrzaj_base64).decode("utf-8")
@@ -117,8 +116,7 @@ def spremi_na_github(filename, podaci):
         sha = ""
        # odgovor_get = requests.get(url, headers=headers, timeout=5)
         odgovor_put = requests.put(url, headers=headers, json=payload, timeout=5)
-        #st.write(f"GitHub odgovor za {filename}: {odgovor_put.status_code}")
-
+       
         
         if odgovor_get.status_code == 200:
             sha = odgovor_get.json()["sha"]
