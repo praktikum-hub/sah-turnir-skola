@@ -129,7 +129,7 @@ def spremi_na_github(filename, podaci):
         if sha:
             payload["sha"] = sha
         
-        requests.put(url, headers=headers, json=payload, timeout=5)
+        #requests.put(url, headers=headers, json=payload, timeout=5)
         odgovor_put = requests.put(url, headers=headers, json=payload, timeout=5)
         
     except Exception:
