@@ -218,14 +218,10 @@
                     `;
                 });
             }
-      //  } catch (e) {
-      //      document.getElementById("tablica-rang").innerHTML = `<tr><td colspan="7" style="text-align:center; color:#dc2626;">Trenutno nema registriranih rezultata na turniru.</td></tr>`;
-      //  }
         } catch (e) {
-            console.error("Točna greška na stranici:", e); // <--- ZAMIJENITE ILI DODAJTE OVAJ REDAK
-            document.getElementById("tablica-rang").innerHTML = `<tr><td colspan="7" style="text-align:center; color:#dc2626;">Problem s formatom podataka: ${e.message}</td></tr>`;
+            document.getElementById("tablica-rang").innerHTML = `<tr><td colspan="7" style="text-align:center; color:#dc2626;">Trenutno nema registriranih rezultata na turniru.</td></tr>`;
         }
-
+      
         try {
             // 2. Dohvaćanje i obrada Povijesti mečeva
             const odzivPovijest = await fetch(URL_POVIJEST);
