@@ -1,13 +1,6 @@
 [
     {
         "id": 1,
-        "datum": "16.10.2026. 09:04",
-        "bijeli": "Ivan Horvat",
-        "crni": "Pero Peric",
-        "ishod": "1-0"
-    },
-    {
-        "id": 2,
         "datum": "16.10.2026. 09:06",
         "bijeli": "Novi Ucenik",
         "crni": "Test Test",
