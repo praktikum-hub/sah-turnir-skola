@@ -298,8 +298,15 @@ if len(podaci) >= 2:
             spremi_povijest(povijest)
             preracunaj_sve_iz_povijesti()
 
-            st.session_state["podaci"] = ucitaj_podatke()
-            st.session_state["povijest"] = ucitaj_povijest()
+           # st.session_state["podaci"] = ucitaj_podatke()
+           # st.session_state["povijest"] = ucitaj_povijest()
+
+            # DODAJTE OVO NA VRH GLAVNOG KODA (izvan funkcija, odmah nakon učitavanja datoteka):
+            if "podaci" not in st.session_state:
+                st.session_state["podaci"] = podaci
+            if "povijest" not in st.session_state:
+                st.session_state["povijest"] = povijest
+
             
             st.sidebar.success("Rezultat uspješno spremljen!")
             st.rerun()
