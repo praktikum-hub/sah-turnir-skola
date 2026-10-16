@@ -303,9 +303,9 @@ if len(podaci) >= 2:
 
             # DODAJTE OVO NA VRH GLAVNOG KODA (izvan funkcija, odmah nakon učitavanja datoteka):
             if "podaci" not in st.session_state:
-                st.session_state["podaci"] = podaci
+                st.session_state["podaci"] = ucitaj_podatke()
             if "povijest" not in st.session_state:
-                st.session_state["povijest"] = povijest
+                st.session_state["povijest"] = ucitaj_povijest()
 
             
             st.sidebar.success("Rezultat uspješno spremljen!")
