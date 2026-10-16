@@ -193,10 +193,8 @@
             // 1. Dohvaćanje i obrada Rang Liste
             const odzivPodaci = await fetch(URL_PODACI);
             if (odzivPodaci.ok) {
-                //const podaci = await odzivPodaci.json();
-                const tekst = await odzivPodaci.text();
-                const podaci = JSON.parse(tekst.trim());
-
+                const podaci = await odzivPodaci.json();
+                
                 
                 const sortirani = Object.entries(podaci).map(([ime, stats]) => ({ ime, ...stats }));
                 sortirani.sort((a, b) => b.rejting - a.rejting || b.pobjede - a.pobjede);
